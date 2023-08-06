@@ -1,0 +1,13 @@
+.antdDatepicker {
+  input {
+    font-size: inherit !important;
+    text-align: center;
+    cursor: pointer;
+  }
+}
+
+.antdDatepickerPopup :global {
+  .ant-picker-footer {
+    display: none;
+  }
+}

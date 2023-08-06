@@ -1,0 +1,13 @@
+.antdInputNumber :global {
+  padding: 1px 0 !important;
+
+  input {
+    font-size: inherit !important;
+    text-align: center !important;
+    cursor: pointer;
+  }
+
+  .ant-picker-footer {
+    display: none;
+  }
+}
