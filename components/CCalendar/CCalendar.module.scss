@@ -1,0 +1,47 @@
+.antdCalendar :global {
+  .ant-picker-calendar-date-value {
+    display: none;
+  }
+  div.ant-picker-panel {
+    background: inherit;
+    border: 0;
+  }
+  .ant-picker-cell.ant-picker-cell-disabled {
+    opacity: 0.7;
+
+    &::before {
+      background: none;
+    }
+  }
+
+  .ant-picker-date-panel .ant-picker-cell:not(.ant-picker-cell-in-view) {
+    pointer-events: none;
+
+    .ant-picker-cell-inner {
+      display: none;
+    }
+  }
+
+  .ant-picker-cell.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+    background: transparent;
+    color: inherit;
+  }
+
+  .ant-picker-date-panel {
+    .ant-picker-body {
+      .ant-picker-content {
+        td.ant-picker-cell.ant-picker-cell-in-view {
+          cursor: default;
+
+          &:hover .ant-picker-cell-container .ant-picker-cell-inner {
+            background: transparent;
+          }
+
+          &.ant-picker-cell-today .ant-picker-cell-inner::before {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

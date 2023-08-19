@@ -14,9 +14,11 @@
     .ant-form-item-label {
       line-height: 14px;
       padding-top: 4px;
+      flex-basis: 18px;
 
       @media (min-width: 768px) {
         padding-top: 0;
+        flex-basis: auto;
       }
     }
   }

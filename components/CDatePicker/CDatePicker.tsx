@@ -1,12 +1,14 @@
+"use client";
+
 import { FC } from "react";
 import { DatePicker, DatePickerProps } from "antd";
 
+import "dayjs/locale/pl";
+import locale from "antd/es/date-picker/locale/pl_PL";
+dayjs.locale("pl");
+
 import styles from "./CDatePicker.module.scss";
 import dayjs from "dayjs";
-import locale from "antd/es/date-picker/locale/pl_PL";
-
-import "dayjs/locale/pl";
-dayjs.locale("pl");
 
 const CDatePicker: FC<DatePickerProps> = ({
   className = "",

@@ -11,13 +11,13 @@ const RoomPreview: FC<HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col border-green-800 border-2 py-5 px-5 rounded-lg bg-white gap-5 ${className}`}
+      className={`flex flex-col border-green-800 border-opacity-80 border-2 py-5 px-5 rounded-lg bg-white gap-5 ${className}`}
       {...props}
     >
       <div>
         <Image
           className="rounded-md"
-          src="/apartment-main.jpg"
+          src="/apartment-inside.jpg"
           alt="Pokój"
           width={0}
           height={0}
@@ -51,8 +51,8 @@ const RoomPreview: FC<HTMLAttributes<HTMLDivElement>> = ({
             Rezerwuj
           </Link>
           <Link
-            className="border-green-800 border-2 bg-opacity-80 rounded-md px-4  py-1.5 text-sm text-center"
-            href="/"
+            className="border-green-800 border-opacity-80 border-2 bg-opacity-80 rounded-md px-4  py-1.5 text-sm text-center"
+            href="/room/2"
           >
             Szczegóły pokoju
           </Link>

@@ -1,11 +1,17 @@
-import "./globals.css";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { Footer, Header } from "@/components";
-import { ReactNode } from "react";
-import StyledComponentsRegistry from "../lib/AntdRegistry";
+import StyledComponentsRegistry from "../../lib/AntdRegistry";
 import theme from "@/theme/themeConfig";
 import { ConfigProvider } from "antd";
+import "dayjs/locale/pl";
+import dayjs from "dayjs";
+
+import "../globals.css";
+import "react-multi-carousel/lib/styles.css";
+import { ReactNode } from "react";
+
+dayjs.locale("pl");
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -17,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="pl">
       <body className={`min-h-screen ${font.className}`}>
@@ -29,4 +35,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
-}
+};
+
+export default MainLayout;

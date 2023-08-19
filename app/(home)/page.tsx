@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Attraction, ReservationBar, RoomPreview } from "@/components";
+import { ReactElement } from "react";
 
-export default function Home() {
+function Home() {
   return (
     <main className="w-full">
       <div className="relative">
@@ -80,3 +81,8 @@ export default function Home() {
     </main>
   );
 }
+
+Home.getLayout = (page: ReactElement) => {
+  return <div>{page}</div>;
+};
+export default Home;
