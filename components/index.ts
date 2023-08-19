@@ -6,3 +6,4 @@ export { default as Attraction } from "./Attraction/Attraction";
 export { default as CCalendar } from "./CCalendar/CCalendar";
 export { default as RoomGallery } from "./RoomGallery/RoomGallery";
 export { default as PageTitle } from "./PageTitle/PageTitle";
+export { default as Layout } from "./Layout/Layout";
