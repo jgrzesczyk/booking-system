@@ -1,35 +1,59 @@
 "use client";
 
-import { FC, HTMLAttributes, useState } from "react";
+import { FC, HTMLAttributes, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import CDatePicker from "@/components/CDatePicker/CDatePicker";
 import CInputNumber from "@/components/CInputNumber/CInputNumber";
-import { Form } from "antd";
+import { Form, FormInstance } from "antd";
 import { useForm } from "antd/es/form/Form";
 
 import styles from "./ReservationBar.module.scss";
+import clsx from "clsx";
+import { ReservationBarData } from "@/app/(other-pages)/reserve/room-choose/types";
+import { useRouter } from "next/navigation";
 
-const ReservationBar: FC<HTMLAttributes<HTMLFormElement>> = ({
-  className = "",
-  ...props
-}) => {
+const initFormData: ReservationBarData = {
+  arrival: dayjs(),
+  departure: dayjs().add(1, "day"),
+  people: 2,
+};
+
+const ReservationBar: FC<
+  HTMLAttributes<HTMLFormElement> & {
+    isFormItem?: boolean;
+    initValues?: ReservationBarData | null;
+    handleSubmit?: (form: FormInstance<ReservationBarData>) => void;
+  }
+> = ({ isFormItem, handleSubmit, initValues, className = "", ...props }) => {
+  const router = useRouter();
   const [form] = useForm();
   const [departureCalendarOpen, setDepartureCalendarOpen] = useState(false);
 
-  const handleSubmit = () => {
-    console.log(form.getFieldsValue());
+  const defaultHandleSubmit = (form: FormInstance<ReservationBarData>) => {
+    localStorage.setItem(
+      "reservationData",
+      JSON.stringify(form.getFieldsValue()),
+    );
+    router.push("/reserve/room-choose");
   };
+
+  useEffect(() => {
+    if (isFormItem) {
+      (handleSubmit || defaultHandleSubmit)(form);
+    }
+  }, [form, isFormItem]);
 
   return (
     <Form
       form={form}
       layout="vertical"
-      initialValues={{
-        arrival: dayjs(),
-        departure: dayjs().add(1, "day"),
-        people: 2,
-      }}
-      className={`static md:absolute flex justify-center border-y-4 md:border-y-0 border-green-800 border-opacity-80 md:left-1/2 md:-translate-x-1/2 md:bottom-5 bg-white bg-opacity-70 md:rounded-lg drop-shadow-2xl ${styles.reservationBarForm} ${className}`}
+      initialValues={initValues || initFormData}
+      className={clsx(
+        "flex justify-center border-y-4 md:border-y-0 border-green-800 border-opacity-80 bg-white bg-opacity-70 md:rounded-lg drop-shadow-2xl",
+        isFormItem && "border-x-2 border-y-2 rounded-md overflow-hidden",
+        styles.reservationBarForm,
+        className,
+      )}
       {...props}
     >
       <div className="flex md:py-1.5">
@@ -42,7 +66,12 @@ const ReservationBar: FC<HTMLAttributes<HTMLFormElement>> = ({
           }
           className="flex items-center flex-col w-28 md:w-36 !mb-0"
         >
-          <CDatePicker onSelect={() => setDepartureCalendarOpen(true)} />
+          <CDatePicker
+            onSelect={(day) => {
+              form.setFieldValue("departure", day.add(1, "day"));
+              setDepartureCalendarOpen(true);
+            }}
+          />
         </Form.Item>
         <Form.Item
           name="departure"
@@ -71,10 +100,10 @@ const ReservationBar: FC<HTMLAttributes<HTMLFormElement>> = ({
         </Form.Item>
       </div>
       <button
-        className="bg-green-800 bg-opacity-80 text-white text-sm md:text-base w-28 md:w-36"
-        onClick={handleSubmit}
+        className="bg-green-800 bg-opacity-80 text-white md:rounded-r-lg text-sm md:text-base w-28 md:w-36"
+        onClick={() => (handleSubmit || defaultHandleSubmit)(form)}
       >
-        Rezerwuj
+        {isFormItem ? "Wyszukaj" : "Rezerwuj"}
       </button>
     </Form>
   );

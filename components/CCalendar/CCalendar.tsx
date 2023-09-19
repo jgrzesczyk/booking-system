@@ -25,6 +25,8 @@ const CCalendar: FC<CalendarProps<Dayjs>> = ({ className, ...props }) => {
     if (info.type !== "date") return null;
 
     const busyDays = [
+      "2023-09-09",
+      "2023-09-10",
       "2023-09-19",
       "2023-09-20",
       "2023-09-21",
@@ -32,7 +34,13 @@ const CCalendar: FC<CalendarProps<Dayjs>> = ({ className, ...props }) => {
       "2023-09-26",
     ].map((date) => dayjs(date));
 
-    if (busyDays.find((day) => day.isSame(current))) {
+    if (
+      busyDays.find(
+        (day) =>
+          day.isSame(current) &&
+          day.isAfter(dayjs().subtract(1, "day").endOf("day")),
+      )
+    ) {
       return (
         <div className="ant-picker-cell-container bg-red-300 rounded-md mx-1">
           {info.originNode}
@@ -41,10 +49,7 @@ const CCalendar: FC<CalendarProps<Dayjs>> = ({ className, ...props }) => {
     }
 
     return (
-      <div
-        className="ant-picker-cell-container rounded-md mx-1 cursor-pointer hover:bg-green-800 hover:bg-opacity-80 hover:text-white"
-        onClick={() => console.log(current)}
-      >
+      <div className="ant-picker-cell-container rounded-md mx-1">
         {info.originNode}
       </div>
     );

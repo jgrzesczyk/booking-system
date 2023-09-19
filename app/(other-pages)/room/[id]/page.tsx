@@ -65,7 +65,7 @@ const Room = () => {
           </div>
           <Link
             className="bg-green-800 bg-opacity-80 text-white rounded-md py-3 text-center mt-5 block"
-            href="/reserve"
+            href={`/reserve/room-choose?highlight=2`}
           >
             Rezerwuj
           </Link>

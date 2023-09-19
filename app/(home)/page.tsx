@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Attraction, ReservationBar, RoomPreview } from "@/components";
-import { ReactElement } from "react";
 
 function Home() {
   return (
@@ -30,7 +29,7 @@ function Home() {
         <div className="absolute bottom-20 pl-3 text-base md:bottom-44 md:pl-20 text-white tracking-wide md:text-3xl drop-shadow-2xl">
           Przyjedź i wypocznij
         </div>
-        <ReservationBar />
+        <ReservationBar className="static md:absolute md:left-1/2 md:-translate-x-1/2 md:bottom-5" />
       </div>
       <section className="bg-gray-100 py-8 md:py-16">
         <h2 className="text-center uppercase font-bold text-2xl md:text-4xl mb-8 md:mb-16">
@@ -81,8 +80,4 @@ function Home() {
     </main>
   );
 }
-
-Home.getLayout = (page: ReactElement) => {
-  return <div>{page}</div>;
-};
 export default Home;
