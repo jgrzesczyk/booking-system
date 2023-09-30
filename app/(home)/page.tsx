@@ -1,7 +1,26 @@
 import Image from "next/image";
 import { Attraction, ReservationBar, RoomPreview } from "@/components";
+import prisma from "@/lib/prisma";
+import { Amenity, Room } from "@prisma/client";
 
-function Home() {
+async function getData() {
+  const rooms = await prisma.room.findMany({
+    where: {
+      isActive: true,
+    },
+    include: {
+      amenities: {
+        select: { name: true, id: true },
+      },
+    },
+  });
+
+  return rooms;
+}
+
+async function Home() {
+  const rooms: (Room & { amenities: Amenity[] })[] = await getData();
+
   return (
     <main className="w-full">
       <div className="relative">
@@ -36,8 +55,9 @@ function Home() {
           Pokoje
         </h2>
         <div className="px-5 xl:px-0 grid-cols-1 md:grid-cols-2 grid gap-10 max-w-screen-lg mx-auto">
-          <RoomPreview />
-          <RoomPreview />
+          {rooms.map((room) => (
+            <RoomPreview key={room.id} room={room} />
+          ))}
         </div>
       </section>
       <section className="py-8 md:py-16 relative">

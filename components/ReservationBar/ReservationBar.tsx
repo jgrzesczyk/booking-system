@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, HTMLAttributes, useEffect, useState } from "react";
+import { FC, HTMLAttributes, useState } from "react";
 import dayjs from "dayjs";
 import CDatePicker from "@/components/CDatePicker/CDatePicker";
 import CInputNumber from "@/components/CInputNumber/CInputNumber";
@@ -11,11 +11,14 @@ import styles from "./ReservationBar.module.scss";
 import clsx from "clsx";
 import { ReservationBarData } from "@/app/(other-pages)/reserve/room-choose/types";
 import { useRouter } from "next/navigation";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 const initFormData: ReservationBarData = {
-  arrival: dayjs(),
-  departure: dayjs().add(1, "day"),
-  people: 2,
+  arrival: dayjs().utcOffset(0).startOf("day"),
+  departure: dayjs().utcOffset(0).startOf("day").add(1, "day"),
+  people: 1,
 };
 
 const ReservationBar: FC<
@@ -36,12 +39,6 @@ const ReservationBar: FC<
     );
     router.push("/reserve/room-choose");
   };
-
-  useEffect(() => {
-    if (isFormItem) {
-      (handleSubmit || defaultHandleSubmit)(form);
-    }
-  }, [form, isFormItem]);
 
   return (
     <Form

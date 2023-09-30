@@ -10,10 +10,15 @@ import "dayjs/locale/pl";
 import locale from "antd/es/date-picker/locale/pl_PL";
 
 import styles from "./CCalendar.module.scss";
+import { Reservation } from "@prisma/client";
 
 dayjs.locale("pl");
 
-const CCalendar: FC<CalendarProps<Dayjs>> = ({ className, ...props }) => {
+const CCalendar: FC<
+  CalendarProps<Dayjs> & {
+    reservations: Pick<Reservation, "dateTo" | "dateFrom">[];
+  }
+> = ({ className, reservations = [], ...props }) => {
   const [calendarViewDate, setCalendarViewDate] = useState(
     dayjs().startOf("month"),
   );
@@ -24,15 +29,14 @@ const CCalendar: FC<CalendarProps<Dayjs>> = ({ className, ...props }) => {
   const cellRender = (current: Dayjs, info: CellRenderInfo<Dayjs>) => {
     if (info.type !== "date") return null;
 
-    const busyDays = [
-      "2023-09-09",
-      "2023-09-10",
-      "2023-09-19",
-      "2023-09-20",
-      "2023-09-21",
-      "2023-09-22",
-      "2023-09-26",
-    ].map((date) => dayjs(date));
+    const busyDays = reservations
+      .flatMap(({ dateTo, dateFrom }) => {
+        const diff = dayjs(dateTo).diff(dayjs(dateFrom), "day");
+        return Array(diff)
+          .fill(null)
+          .map((_, i) => dayjs(dateFrom).add(i, "day").format("YYYY-MM-DD"));
+      })
+      .map((day) => dayjs(day));
 
     if (
       busyDays.find(

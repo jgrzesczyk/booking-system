@@ -6,10 +6,14 @@ import { FC, HTMLAttributes, useContext } from "react";
 import clsx from "clsx";
 import { AiFillCheckCircle, AiFillDollarCircle } from "react-icons/ai";
 import { RoomChooseContext } from "@/app/(other-pages)/reserve/room-choose/_context";
+import { Room } from "@prisma/client";
 
 const RoomReservationPreview: FC<
-  HTMLAttributes<HTMLDivElement> & { isFinished?: boolean }
-> = ({ isFinished, className = "", ...props }) => {
+  HTMLAttributes<HTMLDivElement> & {
+    room: Room & { fullPrice: number };
+    isFinished?: boolean;
+  }
+> = ({ room, isFinished, className = "", ...props }) => {
   const context = useContext(RoomChooseContext);
 
   return (
@@ -40,7 +44,7 @@ const RoomReservationPreview: FC<
         </div>
         <div className={`flex flex-col gap-3`}>
           <div className="flex flex-col flex-grow items-start">
-            <h3 className="font-bold mb-4 text-xl">Pokój Alfa</h3>
+            <h3 className="font-bold mb-4 text-xl">{room.name}</h3>
             <p className="mb-1 flex gap-2 items-center">
               <BsFillPersonFill className="shrink-0 text-green-800 text-opacity-80" />
               <span>Osób: {context?.barData?.people}</span>
@@ -55,7 +59,7 @@ const RoomReservationPreview: FC<
             </p>
             <p className="flex gap-2 items-center text-lg mt-4 font-bold">
               <AiFillDollarCircle className="shrink-0 text-green-800 text-opacity-80" />
-              <span>2133 zł</span>
+              <span>{room.fullPrice} zł</span>
             </p>
           </div>
         </div>

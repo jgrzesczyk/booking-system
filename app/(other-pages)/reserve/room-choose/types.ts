@@ -17,7 +17,7 @@ export type ReservationBarData = {
 };
 
 export type ReservationDataForm = {
-  paymentType: "payu" | "transfer";
+  paymentType: number;
   name: string;
   phone: string;
   email: string;
@@ -25,3 +25,6 @@ export type ReservationDataForm = {
   postalCode: string;
   city: string;
 };
+
+export type ReservationRequest = ReservationDataForm &
+  ReservationBarData & { roomId: number };

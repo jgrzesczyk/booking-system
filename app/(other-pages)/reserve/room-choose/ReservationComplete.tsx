@@ -1,40 +1,80 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { RoomReservationPreview } from "@/components";
 import { RoomChooseContext } from "@/app/(other-pages)/reserve/room-choose/_context";
-import { Spin } from "antd";
+import { message, Skeleton } from "antd";
+import { Room } from "@prisma/client";
 
 const ReservationComplete: FC = () => {
   const context = useContext(RoomChooseContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [reservationDetails, setReservationDetails] = useState("");
+  const [roomDetails, setRoomDetails] = useState<
+    (Room & { fullPrice: number }) | null
+  >(null);
 
   useEffect(() => {
-    console.log(context?.roomId);
-    console.log(context?.barData);
-    console.log(context?.formData);
+    setIsLoading(true);
 
-    setTimeout(() => setIsLoading(false), 2000);
-  }, []);
+    Promise.all([
+      fetch("/api/reserve/details", {
+        method: "post",
+        body: JSON.stringify({
+          arrival: context?.barData?.arrival,
+          departure: context?.barData?.departure,
+          roomId: context?.roomId,
+        }),
+      }),
+      fetch("/api/reserve", {
+        method: "post",
+        body: JSON.stringify({
+          arrival: context?.barData?.arrival,
+          departure: context?.barData?.departure,
+          people: context?.barData?.people,
+          roomId: context?.roomId,
+          name: context?.formData?.name,
+          city: context?.formData?.city,
+          email: context?.formData?.email,
+          phone: context?.formData?.phone,
+          postalCode: context?.formData?.postalCode,
+          paymentType: context?.formData?.paymentType,
+          address: context?.formData?.address,
+        }),
+      }),
+    ])
+      .then((data) => data.map((d) => d.json()))
+      .then(async ([detailsPromise, reservationPromise]) => {
+        const roomDetails = await detailsPromise;
+        const reservationDetails = await reservationPromise;
 
-  if (isLoading) {
-    return <Spin spinning className="my-10 flex justify-center" />;
+        setRoomDetails(roomDetails);
+        setReservationDetails(reservationDetails);
+      })
+      .then(() => setIsLoading(false))
+      .catch(() => message.error("Wystąpił błąd, spróbuj ponownie później."));
+  }, [context]);
+
+  if (isLoading || !roomDetails) {
+    return <Skeleton active />;
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-8">
-      <RoomReservationPreview isFinished className="flex-1" />
+      <RoomReservationPreview
+        isFinished
+        room={roomDetails}
+        className="flex-1"
+      />
       <div className="flex-1 flex flex-col items-center text-center gap-4">
-        <div>Wybrałeś metodę płatności: Przelew</div>
-        <div className="flex flex-col">
-          <span>Prosimy o przelew na numer konta</span>
-          <span className="font-bold">77 1020 2267 0000 4502 0208 2824</span>
-        </div>
-        <div>
-          <span>W tytule przelewu dopisać: </span>
-          <span className="font-bold">Rezerwacja nr 123</span>
-        </div>
+        <div className="font-bold">Rezerwacja nr 123</div>
+        {reservationDetails && (
+          <div
+            className="flex flex-col text-center gap-4"
+            dangerouslySetInnerHTML={{ __html: reservationDetails }}
+          />
+        )}
         <div>
           <span>Kwota do zapłaty: </span>
-          <span className="font-bold">2133zł</span>
+          <span className="font-bold">{roomDetails?.fullPrice}zł</span>
         </div>
       </div>
     </div>

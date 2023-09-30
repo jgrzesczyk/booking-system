@@ -7,21 +7,25 @@ import { AiOutlineCheck } from "react-icons/ai";
 import Link from "next/link";
 import { FC, HTMLAttributes } from "react";
 import clsx from "clsx";
+import { Amenity, Room } from "@prisma/client";
 
 const RoomPreview: FC<
   HTMLAttributes<HTMLDivElement> & {
+    room: Room & { amenities: Amenity[]; fullPrice?: number };
     isFormItem?: boolean;
     isHighlighted?: boolean;
-    isDisabled?: boolean;
   }
-> = ({ className = "", isFormItem, isHighlighted, isDisabled, ...props }) => {
+> = ({ className = "", room, isFormItem, isHighlighted, ...props }) => {
+  if (!room) {
+    return null;
+  }
+
   return (
     <div
       className={clsx(
         "flex border-opacity-80 border-2 py-5 px-5 rounded-lg gap-5 border-green-800 flex-col",
         isFormItem && "cursor-pointer lg:flex-row",
         isHighlighted ? "bg-lime-100" : "bg-white",
-        isDisabled && "bg-gray-200 cursor-default",
         className,
       )}
       {...props}
@@ -39,20 +43,25 @@ const RoomPreview: FC<
       </div>
       <div className={`flex flex-col ${isFormItem ? "" : "sm:flex-row"} gap-3`}>
         <div className="flex flex-col flex-grow items-start">
-          <h3 className="font-bold mb-4 text-xl">Pokój Alfa</h3>
+          <h3 className="font-bold mb-4 text-xl">{room.name}</h3>
           <p className="mb-1 flex gap-2 items-center">
             <BiArea className="shrink-0 text-green-800 text-opacity-80" />
             <span>
-              20 m<sup>2</sup>
+              {room.area} m<sup>2</sup>
             </span>
           </p>
           <p className="mb-1 flex gap-2 items-center">
             <BsFillPersonFill className="shrink-0 text-green-800 text-opacity-80" />
-            <span>2-osobowy</span>
+            <span>{room.peopleNo}-osobowy</span>
           </p>
           <p className="flex gap-2 items-center">
             <AiOutlineCheck className="shrink-0 text-green-800 text-opacity-80" />
-            <span>Wi-fi, TV, mikrofalówka</span>
+            <span>
+              {room.amenities
+                .slice(0, 3)
+                .map(({ name }) => name)
+                .join(", ")}
+            </span>
           </p>
         </div>
         <div
@@ -64,10 +73,9 @@ const RoomPreview: FC<
             <div
               className={clsx(
                 "font-bold bg-green-800 bg-opacity-80 w-40 text-white rounded-md py-2 justify-center flex items-center",
-                isDisabled && "bg-gray-600 cursor-not-allowed",
               )}
             >
-              {isDisabled ? "Niedostępny" : "2322 zł"}
+              {`${room.fullPrice} zł`}
             </div>
           ) : (
             <Link
@@ -80,7 +88,7 @@ const RoomPreview: FC<
           <Link
             onClick={(e) => e.stopPropagation()}
             className="border-green-800 border-opacity-80 border-2 bg-opacity-80 rounded-md px-4 py-1.5 text-sm text-center"
-            href="/room/2"
+            href={`/room/${room.id}`}
           >
             Szczegóły pokoju
           </Link>

@@ -1,0 +1,71 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model AdminUser {
+  login String @id
+  password String
+}
+
+model Room {
+  id Int  @id @default(autoincrement())
+  name String
+  area Int
+  peopleNo Int
+  bedsDescription String
+  description String
+  price Float
+  amenities Amenity[]
+  reservations Reservation[]
+  isActive Boolean @default(true)
+}
+
+model Reservation {
+  id Int  @id @default(autoincrement())
+  price Float
+  dateFrom DateTime
+  dateTo DateTime
+  peopleNo Int
+  name String
+  phone String
+  email String
+  address String
+  postalCode String
+  city String
+  isPaid Boolean
+
+  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId Int
+
+  room Room @relation(fields: [roomId], references: [id])
+  roomId Int
+}
+
+model PriceChange {
+  id Int  @id @default(autoincrement())
+  change Float
+  dateFrom DateTime
+  dateTo DateTime
+}
+
+model Amenity {
+  id Int  @id @default(autoincrement())
+  name String
+  rooms Room[]
+}
+
+model PaymentMethod {
+  id Int  @id @default(autoincrement())
+  name String
+  description String @default("")
+  reservations Reservation[]
+  isActive Boolean @default(false)
+}

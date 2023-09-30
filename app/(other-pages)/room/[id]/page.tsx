@@ -4,8 +4,45 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { AiOutlineCheck, AiOutlineGateway } from "react-icons/ai";
 import Link from "next/link";
 import { CCalendarLegend } from "@/components/CCalendar/CCalendar";
+import prisma from "@/lib/prisma";
+import { Amenity, Reservation, Room } from "@prisma/client";
 
-const Room = () => {
+async function getData(id: number) {
+  const room = await prisma.room.findUnique({
+    where: {
+      id: id,
+      isActive: true,
+    },
+    include: {
+      amenities: {
+        select: { name: true, id: true },
+      },
+    },
+  });
+
+  const reservationDates = await prisma.reservation.findMany({
+    where: {
+      roomId: id,
+    },
+    select: {
+      dateFrom: true,
+      dateTo: true,
+    },
+  });
+
+  return { room, reservationDates };
+}
+
+const RoomPage = async ({ params }: { params: { id: number } }) => {
+  const data = await getData(+params.id);
+  const room: (Room & { amenities: Amenity[] }) | null = data.room;
+  const reservations: Pick<Reservation, "dateTo" | "dateFrom">[] =
+    data.reservationDates;
+
+  if (!room) {
+    return null;
+  }
+
   return (
     <>
       <PageTitle title="Pokój Alfa" />
@@ -17,41 +54,22 @@ const Room = () => {
           <p className="mb-1 flex gap-2 items-center">
             <BiArea className="shrink-0 text-green-800 text-opacity-80" />
             <span>
-              20 m<sup>2</sup>
+              {room.area} m<sup>2</sup>
             </span>
           </p>
           <p className="mb-1 flex gap-2 items-center">
             <BsFillPersonFill className="shrink-0 text-green-800 text-opacity-80" />
-            <span>2-osobowy</span>
+            <span>{room.peopleNo}-osobowy</span>
           </p>
           <p className="mb-1 flex gap-2 items-center">
             <AiOutlineGateway className="shrink-0 text-green-800 text-opacity-80" />
-            <span>2 łóżka pojedyncze</span>
+            <span>{room.bedsDescription}</span>
           </p>
-          <p className="mt-5">
-            Featuring free toiletries, this twin room includes a private
-            bathroom with a walk-in shower and a hairdryer. The twin room
-            features a tea and coffee maker, a wardrobe, a carpeted floor,
-            heating, as well as a flat-screen TV. The unit has 2 beds.
-          </p>
+          <p className="mt-5">{room.description}</p>
           <div className="mt-5 mb-2">Udogodnienia w pokoju:</div>
           <div className="flex flex-wrap gap-y-1 text-sm">
-            {[
-              "biurko",
-              "telewizor",
-              "przyjazny alergikom",
-              "pościel",
-              "dojazd windą na wyższe piętra",
-              "wykładzina podłogowa",
-              "telewizor z płaskim ekranem",
-              "czajnik elektryczny",
-              "ogrzewanie",
-              "ręczniki",
-              "szafa lub garderoba",
-              "gniazdko koło łóżka",
-              "zestaw do parzenia kawy i herbaty",
-              "wieszak na ubrania",
-            ]
+            {room.amenities
+              .map(({ name }) => name)
               .sort((a, b) => a.localeCompare(b))
               .map((item) => (
                 <p
@@ -65,13 +83,16 @@ const Room = () => {
           </div>
           <Link
             className="bg-green-800 bg-opacity-80 text-white rounded-md py-3 text-center mt-5 block"
-            href={`/reserve/room-choose?highlight=2`}
+            href={`/reserve/room-choose?highlight=${room.id}`}
           >
             Rezerwuj
           </Link>
         </div>
         <div className="relative col-span-2 bg-gray-100 flex flex-col items-center rounded-md pt-3">
-          <CCalendar className="w-80 !bg-gray-100" />
+          <CCalendar
+            reservations={reservations}
+            className="w-80 !bg-gray-100"
+          />
           <CCalendarLegend className="mx-auto mb-4 md:mb-0 md:absolute md:bottom-4 md:right-4" />
         </div>
       </main>
@@ -79,4 +100,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default RoomPage;

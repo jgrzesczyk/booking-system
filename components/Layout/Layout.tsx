@@ -5,10 +5,10 @@ import theme from "@/theme/themeConfig";
 import { ConfigProvider } from "antd";
 import "dayjs/locale/pl";
 import dayjs from "dayjs";
+import { ReactNode } from "react";
 
 import "../../app/globals.css";
 import "react-multi-carousel/lib/styles.css";
-import { ReactNode } from "react";
 
 dayjs.locale("pl");
 

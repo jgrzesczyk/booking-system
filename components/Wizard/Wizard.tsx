@@ -42,7 +42,7 @@ const Wizard: FC<
         })}
       </div>
 
-      <div className="w-full max-w-screen-lg mx-auto mt-10 px-4 lg:px-0">
+      <div className="w-full max-w-screen-lg mx-auto my-10 px-4 lg:px-0">
         <StepContent setIsValid={steps[activeStep - 1].setIsValid} />
       </div>
 
