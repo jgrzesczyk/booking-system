@@ -24,13 +24,13 @@ const RoomPreview: FC<
     <div
       className={clsx(
         "flex border-opacity-80 border-2 py-5 px-5 rounded-lg gap-5 border-green-800 flex-col",
-        isFormItem && "cursor-pointer lg:flex-row",
+        isFormItem && "cursor-pointer lg:flex-row w-full sm:w-3/5",
         isHighlighted ? "bg-lime-100" : "bg-white",
         className,
       )}
       {...props}
     >
-      <div>
+      <div className={clsx(isFormItem && "lg:w-2/5")}>
         <Image
           className="rounded-md"
           src="/apartment-inside.jpg"
@@ -41,7 +41,11 @@ const RoomPreview: FC<
           style={{ width: "100%", height: "200px", objectFit: "cover" }}
         />
       </div>
-      <div className={`flex flex-col ${isFormItem ? "" : "sm:flex-row"} gap-3`}>
+      <div
+        className={`flex flex-col ${
+          isFormItem ? "lg:w-3/5" : "sm:flex-row"
+        } gap-3`}
+      >
         <div className="flex flex-col flex-grow items-start">
           <h3 className="font-bold mb-4 text-xl">{room.name}</h3>
           <p className="mb-1 flex gap-2 items-center">
@@ -66,7 +70,7 @@ const RoomPreview: FC<
         </div>
         <div
           className={`flex-grow-0 flex-shrink-0 flex ${
-            isFormItem ? "flex-row-reverse" : "flex-col"
+            isFormItem ? "flex-row-reverse lg:justify-end" : "flex-col"
           } gap-3`}
         >
           {isFormItem ? (
@@ -79,7 +83,7 @@ const RoomPreview: FC<
             </div>
           ) : (
             <Link
-              className="bg-green-800 bg-opacity-80 w-40 text-white rounded-md py-2 text-center"
+              className="bg-green-800 bg-opacity-80 sm:w-40 text-white rounded-md py-2 text-center"
               href={`/reserve/room-choose?highlight=2`}
             >
               Rezerwuj

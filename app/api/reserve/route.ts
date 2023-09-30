@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { ReservationRequest } from "@/app/(other-pages)/reserve/room-choose/types";
 import dayjs from "dayjs";
 import { getReservationPrices } from "@/app/api/reserve/getReservationPrices";
+import { sendMail } from "@/service/mailService";
 
 export async function POST(req: NextRequest) {
   const requestData: ReservationRequest | null = await req.json();
@@ -87,7 +88,7 @@ export async function POST(req: NextRequest) {
     0,
   );
 
-  await prisma.reservation.create({
+  const { id } = await prisma.reservation.create({
     data: {
       room: { connect: { id: roomId } },
       paymentMethod: { connect: { id: paymentType } },
@@ -105,5 +106,20 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json(paymentMethod.description, { status: 200 });
+  await sendMail(
+    `Utworzona rezerwacja nr ${id}`,
+    email,
+    `<div>Nowa rezerwacja na ${room.name}</div>` +
+      `<div>W dniach <b>${dayjs(arrival).format("YYYY-MM-DD")} - ${dayjs(
+        departure,
+      ).format("YYYY-MM-DD")}</b>, liczba osób: ${people}</div>` +
+      paymentMethod.description +
+      `<div>Kwota <b>${fullPrice}zł</b></div>` +
+      `<div>Pozdrawiamy, wczasypodgrusza.pl</div>`,
+  );
+
+  return NextResponse.json(
+    { id, description: paymentMethod.description },
+    { status: 200 },
+  );
 }

@@ -68,6 +68,9 @@ const ReservationBar: FC<
               form.setFieldValue("departure", day.add(1, "day"));
               setDepartureCalendarOpen(true);
             }}
+            disabledDate={(curr) =>
+              curr.isBefore(dayjs()) || curr.isAfter(dayjs().add(1, "year"))
+            }
           />
         </Form.Item>
         <Form.Item
@@ -82,6 +85,9 @@ const ReservationBar: FC<
           <CDatePicker
             open={departureCalendarOpen}
             onOpenChange={setDepartureCalendarOpen}
+            disabledDate={(curr) =>
+              curr.isBefore(dayjs()) || curr.isAfter(dayjs().add(1, "year"))
+            }
           />
         </Form.Item>
         <Form.Item

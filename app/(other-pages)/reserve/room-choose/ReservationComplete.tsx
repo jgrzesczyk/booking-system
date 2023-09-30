@@ -6,6 +6,7 @@ import { Room } from "@prisma/client";
 
 const ReservationComplete: FC = () => {
   const context = useContext(RoomChooseContext);
+  const [id, setId] = useState<number>();
   const [isLoading, setIsLoading] = useState(false);
   const [reservationDetails, setReservationDetails] = useState("");
   const [roomDetails, setRoomDetails] = useState<
@@ -44,14 +45,15 @@ const ReservationComplete: FC = () => {
       .then((data) => data.map((d) => d.json()))
       .then(async ([detailsPromise, reservationPromise]) => {
         const roomDetails = await detailsPromise;
-        const reservationDetails = await reservationPromise;
+        const { id, description } = await reservationPromise;
 
         setRoomDetails(roomDetails);
-        setReservationDetails(reservationDetails);
+        setReservationDetails(description);
+        setId(id);
       })
       .then(() => setIsLoading(false))
       .catch(() => message.error("Wystąpił błąd, spróbuj ponownie później."));
-  }, [context]);
+  }, []);
 
   if (isLoading || !roomDetails) {
     return <Skeleton active />;
@@ -65,7 +67,7 @@ const ReservationComplete: FC = () => {
         className="flex-1"
       />
       <div className="flex-1 flex flex-col items-center text-center gap-4">
-        <div className="font-bold">Rezerwacja nr 123</div>
+        <div className="font-bold">Rezerwacja nr {id}</div>
         {reservationDetails && (
           <div
             className="flex flex-col text-center gap-4"
