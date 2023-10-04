@@ -1,10 +1,17 @@
 import Image from "next/image";
 import { AiFillMail, AiFillPhone } from "react-icons/ai";
 import Link from "next/link";
+import clsx from "clsx";
+import { FC } from "react";
 
-const Footer = () => {
+const Footer: FC<{ isAdmin?: boolean }> = ({ isAdmin }) => {
   return (
-    <footer className="py-10 text-white bg-green-800 bg-opacity-80">
+    <footer
+      className={clsx(
+        "py-10 text-white bg-opacity-80",
+        isAdmin ? "bg-blue-800" : "bg-green-800",
+      )}
+    >
       <div className="max-w-screen-lg mx-auto flex gap-3 flex-col md:flex-row px-5 xl:px-0">
         <div className="basis-1/2 flex flex-col items-center md:items-start">
           <Image
