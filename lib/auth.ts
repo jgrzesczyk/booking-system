@@ -1,8 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
-import { NextAuthOptions, Session } from "next-auth";
+import { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import { AdapterUser } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -55,15 +56,13 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async session({ session, user }: { session: Session; user: any }) {
-      if (user !== null) {
-        session.user = user;
-      }
-      return session;
+    async session(params: { session: Session; token: JWT; user: AdapterUser }) {
+      params.session.user = params.token.user as AdapterUser;
+      return params.session;
     },
-
-    async jwt({ token }: { token: JWT }) {
-      return token;
+    async jwt(params: { token: JWT; user: User | AdapterUser }) {
+      if (params.user) params.token.user = params.user;
+      return params.token;
     },
   },
 };

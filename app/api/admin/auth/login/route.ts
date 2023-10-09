@@ -13,10 +13,15 @@ export async function POST(req: NextRequest) {
       select: {
         login: true,
         password: true,
+        role: true,
       },
     });
+
     if (user && user.password === hashPassword(password)) {
-      return NextResponse.json({ login: user.login }, { status: 200 });
+      return NextResponse.json(
+        { login: user.login, role: user.role },
+        { status: 200 },
+      );
     } else {
       return NextResponse.json(null, { status: 401 });
     }

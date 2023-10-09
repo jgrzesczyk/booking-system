@@ -1,57 +1,33 @@
 "use client";
 
 import { PageTitle } from "@/components";
-import { Form, Input } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useWatch } from "rc-field-form";
-import { useRouter, useSearchParams } from "next/navigation";
-import clsx from "clsx";
+import { Form, Input } from "antd";
 import { FaSpinner } from "react-icons/fa";
+import { useState } from "react";
+import clsx from "clsx";
 
-const Login = () => {
+const Users = () => {
   const [form] = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { push } = useRouter();
-  const searchParams = useSearchParams();
-
-  const watchForm = useWatch([], form);
-
-  useEffect(() => {
-    setError("");
-  }, [watchForm]);
-
-  const handleSubmit = async () => {
-    const { login, password } = form.getFieldsValue();
-
-    if (!login || !password) {
-      setError("Nie podano danych do logowania.");
-      return;
-    }
-
-    setIsLoading(true);
-
-    const res = await signIn("credentials", {
-      login,
-      password,
-      redirect: false,
+  const handleRegister = async () => {
+    const res = await fetch("/api/admin/auth/register", {
+      method: "POST",
+      body: JSON.stringify(form.getFieldsValue()),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    if (res?.ok) {
-      const redirectUrl = searchParams.get("callbackUrl") || "/admin/users";
-      push(redirectUrl);
-    } else {
-      setError("Wystąpił błąd przy zalogowaniu, spróbuj ponownie.");
-      setIsLoading(false);
-    }
+    return await res.json();
   };
 
   return (
     <>
-      <PageTitle isAdmin title="Logowanie" />
-      <main className="w-full max-w-screen-lg mx-auto my-10 flex justify-center">
+      <PageTitle isAdmin title="Lista administratorów" />
+      <main className="w-full max-w-screen-lg mx-auto my-10 flex">
+        <div>xx</div>
         <Form
           form={form}
           layout="vertical"
@@ -70,7 +46,7 @@ const Login = () => {
               isLoading && "bg-gray-200",
               "rounded-md py-2 flex items-center justify-center gap-4",
             )}
-            onClick={() => !isLoading && handleSubmit()}
+            onClick={() => !isLoading && handleRegister()}
             disabled={isLoading}
           >
             {isLoading && <FaSpinner />}
@@ -85,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Users;
