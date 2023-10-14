@@ -69,11 +69,11 @@ const Users = () => {
   return (
     <>
       <PageTitle isAdmin title="Lista administratorów" />
-      <main className="w-full max-w-screen-lg mx-auto my-10 flex gap-16 items-start">
+      <main className="w-full max-w-screen-lg mx-auto my-10 px-10 items-center flex flex-col md:flex-row gap-16 md:items-start">
         <Form
           form={form}
           layout="vertical"
-          className="w-64 max-w-full flex flex-col justify-center flex-grow"
+          className="w-full md:w-64 max-w-full flex flex-col justify-center flex-grow"
         >
           <div className="mb-6 text-lg">Nowy administrator</div>
           <Form.Item label="Login" name="login">
@@ -99,7 +99,7 @@ const Users = () => {
             <div className="text-red-800 mt-4 text-center">{error}</div>
           )}
         </Form>
-        <div className="flex-grow-0 basis-1/2">
+        <div className="basis-full w-full flex-grow-0 md:basis-1/2">
           <table className="w-full text-left rounded-md">
             <thead className="border-b-2">
               <tr>
