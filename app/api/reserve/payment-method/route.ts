@@ -6,6 +6,10 @@ export async function GET() {
     orderBy: {
       id: "asc",
     },
+
+    where: {
+      isActive: true,
+    },
   });
   return NextResponse.json(paymentMethods, { status: 200 });
 }
