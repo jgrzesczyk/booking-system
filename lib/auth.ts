@@ -44,9 +44,9 @@ export const authOptions: NextAuthOptions = {
   },
 
   pages: {
-    signIn: "http://localhost:3000/admin/login",
-    signOut: "http://localhost:3000/admin/login",
-    error: "http://localhost:3000/admin/login",
+    signIn: `${process.env.NEXTAUTH_URL}/admin/login`,
+    signOut:`${process.env.NEXTAUTH_URL}/admin/login`,
+    error: `${process.env.NEXTAUTH_URL}/admin/login`,
   },
 
   callbacks: {
