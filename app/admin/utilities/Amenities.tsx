@@ -1,28 +1,11 @@
 import clsx from "clsx";
 import { BsFillTrashFill } from "react-icons/bs";
 import { Form, Input, message } from "antd";
-import { useEffect, useState } from "react";
-import { AmenityResponse } from "@/app/admin/utilities/types";
+import { AmenityResponse, UtilitiesSection } from "@/app/admin/utilities/types";
 import { useForm } from "antd/es/form/Form";
 
-export const Amenities = () => {
-  const [amenities, setAmenities] = useState<AmenityResponse>([]);
+export const Amenities: UtilitiesSection = ({ data: amenities, fetchData }) => {
   const [form] = useForm();
-
-  const fetchAmenities = async () => {
-    const res = await fetch("/api/admin/amenities", {
-      method: "GET",
-    });
-
-    const amenities = await res.json();
-    setAmenities(amenities);
-  };
-
-  useEffect(() => {
-    (async () => {
-      await fetchAmenities();
-    })();
-  }, []);
 
   const addAmenity = async () => {
     try {
@@ -34,7 +17,7 @@ export const Amenities = () => {
       });
 
       if (res?.ok) {
-        await fetchAmenities();
+        await fetchData();
         form.resetFields();
         message.success("Dodano udogodnienie");
         return;
@@ -52,7 +35,7 @@ export const Amenities = () => {
     });
 
     if (res?.ok) {
-      await fetchAmenities();
+      await fetchData();
       message.success("Usunięto udogodnienie");
     } else {
       message.error("Wystąpił błąd, spróbuj ponownie");
@@ -71,7 +54,7 @@ export const Amenities = () => {
           </tr>
         </thead>
         <tbody>
-          {amenities.map((amenity, i) => (
+          {(amenities as AmenityResponse).map((amenity, i) => (
             <tr
               key={amenity.id}
               className={clsx("border-b", i % 2 === 0 && "bg-gray-100")}
@@ -99,7 +82,7 @@ export const Amenities = () => {
               <Form form={form}>
                 <Form.Item
                   name="name"
-                  rules={[{ required: true, message: "Pole jest wymagane." }]}
+                  rules={[{ required: true, message: "" }]}
                   className="!mb-0"
                 >
                   <Input />

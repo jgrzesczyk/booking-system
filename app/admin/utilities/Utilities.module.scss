@@ -1,0 +1,7 @@
+.utilitiesPage :global {
+  .ant-form-item-has-error {
+    input, textarea {
+      border-color: #ff4d4f;
+    }
+  }
+}

@@ -1,29 +1,13 @@
 import clsx from "clsx";
 import { BsFillTrashFill } from "react-icons/bs";
 import { Form, Input, message } from "antd";
-import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
-import { PriceChange } from "@prisma/client";
 import dayjs from "dayjs";
+import { UtilitiesSection } from "@/app/admin/utilities/types";
+import { PriceChange } from "@prisma/client";
 
-export const PriceChanges = () => {
-  const [data, setData] = useState<PriceChange[]>([]);
+export const PriceChanges: UtilitiesSection = ({ data, fetchData }) => {
   const [form] = useForm();
-
-  const fetchPrices = async () => {
-    const res = await fetch("/api/admin/price-change", {
-      method: "GET",
-    });
-
-    const data = await res.json();
-    setData(data);
-  };
-
-  useEffect(() => {
-    (async () => {
-      await fetchPrices();
-    })();
-  }, []);
 
   const addPriceChange = async () => {
     try {
@@ -34,7 +18,7 @@ export const PriceChanges = () => {
       });
 
       if (res?.ok) {
-        await fetchPrices();
+        await fetchData();
         form.resetFields();
         message.success("Dodano zmianę cen");
         return;
@@ -55,7 +39,7 @@ export const PriceChanges = () => {
     });
 
     if (res?.ok) {
-      await fetchPrices();
+      await fetchData();
       message.success("Usunięto zmianę cen");
     } else {
       message.error("Wystąpił błąd, spróbuj ponownie");
@@ -85,7 +69,7 @@ export const PriceChanges = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, i) => (
+            {(data as PriceChange[]).map((item, i) => (
               <tr
                 key={item.id}
                 className={clsx("border-b", i % 2 === 0 && "bg-gray-100")}

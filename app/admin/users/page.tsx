@@ -2,7 +2,7 @@
 
 import { PageTitle } from "@/components";
 import { useForm } from "antd/es/form/Form";
-import { Form, Input, message } from "antd";
+import { Form, Input, message, Skeleton } from "antd";
 import { FaSpinner } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
@@ -14,6 +14,7 @@ const Users = () => {
   const [form] = useForm();
   const [users, setUsers] = useState<Partial<AdminUser>[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [error, setError] = useState("");
 
   const fetchUsers = async () => {
@@ -63,13 +64,17 @@ const Users = () => {
   useEffect(() => {
     (async () => {
       await fetchUsers();
+      setIsPageLoading(false);
     })();
   }, []);
 
-  return (
-    <>
-      <PageTitle isAdmin title="Lista administratorów" />
-      <main className="w-full max-w-screen-lg mx-auto my-10 px-10 items-center flex flex-col md:flex-row gap-16 md:items-start">
+  const renderContent = () => {
+    if (isPageLoading) {
+      return <Skeleton active />;
+    }
+
+    return (
+      <>
         <Form
           form={form}
           layout="vertical"
@@ -129,6 +134,15 @@ const Users = () => {
             </tbody>
           </table>
         </div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <PageTitle isAdmin title="Lista administratorów" />
+      <main className="w-full max-w-screen-lg mx-auto my-10 px-10 items-center flex flex-col md:flex-row gap-16 md:items-start">
+        {renderContent()}
       </main>
     </>
   );

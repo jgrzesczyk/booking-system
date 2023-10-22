@@ -1,0 +1,9 @@
+.reservations :global {
+  td {
+    min-width: 120px;
+
+    &:first-of-type {
+      min-width: 30px;
+    }
+  }
+}

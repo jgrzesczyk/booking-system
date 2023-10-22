@@ -1,34 +1,21 @@
 import clsx from "clsx";
 import { BsFillTrashFill } from "react-icons/bs";
 import { Checkbox, Form, Input, message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { RxSwitch } from "react-icons/rx";
-import { PaymentMethodsResponse } from "@/app/admin/utilities/types";
+import {
+  PaymentMethodsResponse,
+  UtilitiesSection,
+} from "@/app/admin/utilities/types";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
 
-export const PaymentMethods = () => {
-  const [data, setData] = useState<PaymentMethodsResponse>([]);
+export const PaymentMethods: UtilitiesSection = ({ data, fetchData }) => {
   const [editId, setEditId] = useState<number | null>(null);
   const [editName, setEditName] = useState<string>("");
   const [editDescription, setEditDescription] = useState<string>("");
   const [form] = useForm();
-
-  const fetchData = async () => {
-    const res = await fetch("/api/admin/payment-method", {
-      method: "GET",
-    });
-
-    const data = await res.json();
-    setData(data);
-  };
-
-  useEffect(() => {
-    (async () => {
-      await fetchData();
-    })();
-  }, []);
 
   const addPaymentMethod = async () => {
     try {
@@ -123,7 +110,7 @@ export const PaymentMethods = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, i) => (
+            {(data as PaymentMethodsResponse).map((item, i) => (
               <tr
                 key={item.id}
                 className={clsx("border-b", i % 2 === 0 && "bg-gray-100")}
@@ -158,20 +145,22 @@ export const PaymentMethods = () => {
                         onClick={handleEditMethod}
                       />
                     ) : (
-                      <AiFillEdit
-                        className="cursor-pointer"
-                        onClick={() => handleToggleEdit(item)}
-                      />
-                    )}
-                    <RxSwitch
-                      className="cursor-pointer"
-                      onClick={() => toggleActivePaymentMethod(item.id)}
-                    />
-                    {!item.isUsed && (
-                      <BsFillTrashFill
-                        className="cursor-pointer"
-                        onClick={() => deletePaymentMethod(item.id)}
-                      />
+                      <>
+                        <AiFillEdit
+                          className="cursor-pointer"
+                          onClick={() => handleToggleEdit(item)}
+                        />
+                        <RxSwitch
+                          className="cursor-pointer"
+                          onClick={() => toggleActivePaymentMethod(item.id)}
+                        />
+                        {!item.isUsed && (
+                          <BsFillTrashFill
+                            className="cursor-pointer"
+                            onClick={() => deletePaymentMethod(item.id)}
+                          />
+                        )}
+                      </>
                     )}
                   </div>
                 </td>
