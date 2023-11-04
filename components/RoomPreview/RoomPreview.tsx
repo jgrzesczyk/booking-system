@@ -1,17 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { BiArea } from "react-icons/bi";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiOutlineCheck } from "react-icons/ai";
 import Link from "next/link";
 import { FC, HTMLAttributes } from "react";
 import clsx from "clsx";
-import { Amenity, Room } from "@prisma/client";
+import { Amenity, Photo, Room } from "@prisma/client";
+import { CldImage } from "next-cloudinary";
 
 const RoomPreview: FC<
   HTMLAttributes<HTMLDivElement> & {
-    room: Room & { amenities: Amenity[]; fullPrice?: number };
+    room: Room & { amenities: Amenity[]; photos: Photo[]; fullPrice?: number };
     isFormItem?: boolean;
     isHighlighted?: boolean;
   }
@@ -30,15 +30,13 @@ const RoomPreview: FC<
       )}
       {...props}
     >
-      <div className={clsx(isFormItem && "lg:w-2/5")}>
-        <Image
-          className="rounded-md"
-          src="/apartment-inside.jpg"
-          alt="Pokój"
-          width={0}
-          height={0}
-          sizes="100%"
-          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+      <div className={clsx("h-48 relative", isFormItem && "lg:w-2/5")}>
+        <CldImage
+          fill
+          src={room.photos[0].name}
+          alt={room.name}
+          strictTransformations
+          transformations={["photogallery"]}
         />
       </div>
       <div

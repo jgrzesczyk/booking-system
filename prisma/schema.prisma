@@ -32,6 +32,7 @@ model Room {
   amenities Amenity[]
   reservations Reservation[]
   isActive Boolean @default(true)
+  photos Photo[]
 }
 
 model Reservation {
@@ -74,4 +75,10 @@ model PaymentMethod {
   description String @default("")
   reservations Reservation[]
   isActive Boolean @default(false)
+}
+
+model Photo {
+  name String @id
+  room Room @relation(fields: [roomId], references: [id])
+  roomId Int
 }

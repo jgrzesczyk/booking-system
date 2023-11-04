@@ -24,6 +24,11 @@ export async function GET(
           name: true,
         },
       },
+      photos: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 

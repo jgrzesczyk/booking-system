@@ -1,16 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { BsFillCalendarDateFill, BsFillPersonFill } from "react-icons/bs";
 import { FC, HTMLAttributes, useContext } from "react";
 import clsx from "clsx";
 import { AiFillCheckCircle, AiFillDollarCircle } from "react-icons/ai";
 import { RoomChooseContext } from "@/app/(other-pages)/reserve/room-choose/_context";
-import { Room } from "@prisma/client";
+import { Photo, Room } from "@prisma/client";
+import { CldImage } from "next-cloudinary";
 
 const RoomReservationPreview: FC<
   HTMLAttributes<HTMLDivElement> & {
-    room: Room & { fullPrice: number };
+    room: Room & { photos: Photo[]; fullPrice: number };
     isFinished?: boolean;
   }
 > = ({ room, isFinished, className = "", ...props }) => {
@@ -31,15 +31,13 @@ const RoomReservationPreview: FC<
         </div>
       )}
       <div className="flex flex-col py-5 px-5 gap-5">
-        <div>
-          <Image
-            className="rounded-md"
-            src="/apartment-inside.jpg"
-            alt="Pokój"
-            width={0}
-            height={0}
-            sizes="100%"
-            style={{ width: "100%", height: "200px", objectFit: "cover" }}
+        <div className={clsx("h-48 relative")}>
+          <CldImage
+            fill
+            src={room.photos[0].name}
+            alt={room.name}
+            strictTransformations
+            transformations={["photogallery"]}
           />
         </div>
         <div className={`flex flex-col gap-3`}>

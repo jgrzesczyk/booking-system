@@ -57,6 +57,9 @@ export async function POST(req: NextRequest) {
       amenities: {
         select: { name: true, id: true },
       },
+      photos: {
+        select: { name: true, roomId: true },
+      },
     },
   });
 

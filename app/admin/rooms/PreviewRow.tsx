@@ -47,7 +47,10 @@ export const PreviewRow: FC<PreviewRowProps> = ({
     >
       <td className="px-2 py-3">{index + 1}</td>
       <td className="px-2 py-3">{item.name}</td>
-      <td className="px-2 py-3">{item.area}</td>
+      <td className="px-2 py-3">
+        {`${item.area} m`}
+        <sup>2</sup>
+      </td>
       <td className="px-2 py-3">{item.peopleNo}</td>
       <td className="px-2 py-3">{item.bedsDescription}</td>
       <td className="px-2 py-3">{`${item.price} zł`}</td>

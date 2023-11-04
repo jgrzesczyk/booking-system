@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Attraction, ReservationBar, RoomPreview } from "@/components";
 import prisma from "@/lib/prisma";
-import { Amenity, Room } from "@prisma/client";
+import { Amenity, Photo, Room } from "@prisma/client";
 
 async function getData() {
   const rooms = await prisma.room.findMany({
@@ -12,6 +12,9 @@ async function getData() {
       amenities: {
         select: { name: true, id: true },
       },
+      photos: {
+        select: { name: true, roomId: true },
+      },
     },
   });
 
@@ -19,7 +22,8 @@ async function getData() {
 }
 
 async function Home() {
-  const rooms: (Room & { amenities: Amenity[] })[] = await getData();
+  const rooms: (Room & { amenities: Amenity[]; photos: Photo[] })[] =
+    await getData();
 
   return (
     <main className="w-full">

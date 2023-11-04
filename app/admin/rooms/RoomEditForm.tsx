@@ -4,6 +4,10 @@ import TextArea from "antd/es/input/TextArea";
 import { RoomFormProps } from "@/app/admin/rooms/types";
 import { FaSpinner } from "react-icons/fa";
 import clsx from "clsx";
+import { CldImage } from "next-cloudinary";
+import { MdCancel } from "react-icons/md";
+import { useWatch } from "rc-field-form";
+import styles from "./RoomEditForm.module.scss";
 
 export const RoomEditForm: FC<RoomFormProps> = ({
   form,
@@ -11,6 +15,8 @@ export const RoomEditForm: FC<RoomFormProps> = ({
   submitForm,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const photos = useWatch("photos", form);
+
   return (
     <div className="flex flex-col">
       <Form
@@ -18,7 +24,7 @@ export const RoomEditForm: FC<RoomFormProps> = ({
         layout="vertical"
         className="gap-8 flex flex-col md:flex-row"
       >
-        <div className="flex-grow">
+        <div className="flex-1">
           <Form.Item
             label="Nazwa pokoju"
             rules={[{ required: true, message: "Pole jest wymagane." }]}
@@ -118,7 +124,45 @@ export const RoomEditForm: FC<RoomFormProps> = ({
             <Switch />
           </Form.Item>
         </div>
-        <div className="flex-grow">Zdjęcia</div>
+        <div className="flex-1 flex flex-col gap-4">
+          {photos?.length
+            ? photos.map((item) => (
+                <div key={item} className="h-64 relative">
+                  <CldImage
+                    fill
+                    src={item}
+                    alt="Widok pokoju"
+                    strictTransformations
+                    transformations={["photogallery"]}
+                  />
+                  <MdCancel
+                    className="absolute top-1 right-1 w-6 h-6 cursor-pointer fill-green-800"
+                    onClick={() =>
+                      form.setFieldValue(
+                        "photos",
+                        photos.filter((name) => item !== name),
+                      )
+                    }
+                  />
+                </div>
+              ))
+            : "Brak dodanych zdjęć"}
+
+          <Form.Item
+            className={styles.photoField}
+            name="photos"
+            rules={[
+              {
+                message: "Co najmniej jedno zdjęcie jest wymagane.",
+                validator: (_, value) => {
+                  return value?.length
+                    ? Promise.resolve()
+                    : Promise.reject("Debil");
+                },
+              },
+            ]}
+          />
+        </div>
       </Form>
 
       <button

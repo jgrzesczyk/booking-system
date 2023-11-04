@@ -76,6 +76,7 @@ const RoomView = ({ params }: { params: { id: number } }) => {
       description: roomObject.description,
       bedsDescription: roomObject.bedsDescription,
       amenities: roomObject.amenities.map((x) => x.id),
+      photos: roomObject.photos.map((x) => x.name),
     });
   };
 

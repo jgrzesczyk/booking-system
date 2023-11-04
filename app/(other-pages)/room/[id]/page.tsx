@@ -5,7 +5,7 @@ import { AiOutlineCheck, AiOutlineGateway } from "react-icons/ai";
 import Link from "next/link";
 import { CCalendarLegend } from "@/components/CCalendar/CCalendar";
 import prisma from "@/lib/prisma";
-import { Amenity, Reservation, Room } from "@prisma/client";
+import { Amenity, Photo, Reservation, Room } from "@prisma/client";
 
 async function getData(id: number) {
   const room = await prisma.room.findUnique({
@@ -16,6 +16,12 @@ async function getData(id: number) {
     include: {
       amenities: {
         select: { name: true, id: true },
+      },
+      photos: {
+        select: {
+          name: true,
+          roomId: true,
+        },
       },
     },
   });
@@ -35,7 +41,8 @@ async function getData(id: number) {
 
 const RoomPage = async ({ params }: { params: { id: number } }) => {
   const data = await getData(+params.id);
-  const room: (Room & { amenities: Amenity[] }) | null = data.room;
+  const room: (Room & { amenities: Amenity[]; photos: Photo[] }) | null =
+    data.room;
   const reservations: Pick<Reservation, "dateTo" | "dateFrom">[] =
     data.reservationDates;
 
@@ -48,7 +55,7 @@ const RoomPage = async ({ params }: { params: { id: number } }) => {
       <PageTitle title="Pokój Alfa" />
       <main className="w-full max-w-screen-lg mx-auto flex flex-col gap-8 md:grid md:grid-cols-2 my-10 md:gap-y-10 md:gap-10 px-5 xl:px-0">
         <div>
-          <RoomGallery />
+          <RoomGallery photos={room.photos} />
         </div>
         <div>
           <p className="mb-1 flex gap-2 items-center">

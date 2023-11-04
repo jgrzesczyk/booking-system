@@ -1,9 +1,12 @@
-import { Amenity, Room } from "@prisma/client";
+import { Amenity, Photo, Room } from "@prisma/client";
 import { FormInstance } from "antd";
 import { AmenityResponse } from "@/app/admin/utilities/types";
 import { Dispatch, SetStateAction } from "react";
 
-export type RoomDetailsResponse = Room & { amenities: Amenity[] };
+export type RoomDetailsResponse = Room & {
+  amenities: Amenity[];
+  photos: Photo[];
+};
 export type RoomResponse = (Room & { isUsed: boolean })[];
 
 export type PreviewRowProps = {
@@ -28,5 +31,6 @@ export type RoomForm = {
   description: string;
   price: number;
   amenities: number[];
+  photos: string[];
   isActive?: boolean;
 };

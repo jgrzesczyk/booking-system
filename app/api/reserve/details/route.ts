@@ -51,6 +51,14 @@ export async function POST(req: NextRequest) {
         },
       },
     },
+    include: {
+      photos: {
+        select: {
+          roomId: true,
+          name: true,
+        },
+      },
+    },
   });
 
   if (!room) {
