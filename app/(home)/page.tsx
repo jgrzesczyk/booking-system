@@ -30,7 +30,7 @@ async function Home() {
       <div className="relative">
         <Image
           className="block md:hidden opacity-80"
-          src="/apartment-main.jpg"
+          src="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/jkzp1eb7weg9klit771s"
           alt="Main photo"
           width={0}
           height={0}
@@ -39,7 +39,7 @@ async function Home() {
         />
         <Image
           className="hidden md:block opacity-80"
-          src="/apartment-main.jpg"
+          src="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/jkzp1eb7weg9klit771s"
           alt="Main photo"
           width={0}
           height={0}
@@ -67,7 +67,7 @@ async function Home() {
       <section className="py-8 md:py-16 relative">
         <Image
           className="opacity-30 absolute -z-10 top-0"
-          src="/warsaw.jpg"
+          src="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/wdgeeukivizqfr7nmwpj"
           alt="Panorama Warszawy"
           width={0}
           height={0}
@@ -79,23 +79,23 @@ async function Home() {
         </h2>
         <div className="px-5 xl:px-0 grid-cols-1 md:grid-cols-2 grid gap-10 max-w-screen-lg mx-auto">
           <Attraction
-            source="/culture-palace.jpg"
+            source="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/j02vrjfoh0bwxdngflon"
             header="Pałac Kultury i Nauki"
             content="Najwyższy budynek w Polsce i zarazem wizytówka Warszawy. Ta wzorowana na amerykańskich wieżowcach atrakcja turystyczna miała być darem Związku Radzieckiego dla Polski, a dziś jest siedzibą wielu instytucji oraz firm."
           />
           <Attraction
-            source="/king-castle.jpg"
+            source="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/oeh3pwojskmryubqobrx"
             header="Zamek Królewski"
             content="Dawna rezydencja królów Polski i siedziba Sejmu. Muzeum wnętrz, ośrodek edukacji oraz miejsce uroczystości państwowych i międzynarodowych."
           />
           <Attraction
-            source="/national-stadium.jpg"
+            source="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/p5abf7k5qzxpoanym2nh"
             header="Stadion Narodowy"
             content="Największy stadion w Polsce. Wielofunkcyjny obiekt sportowy wybudowany
         na wałach ziemnych wyburzonego Stadionu Dziesięciolecia."
           />
           <Attraction
-            source="/lazienki-park.jpg"
+            source="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/yyu2951op7hlksykzmam"
             header="Łazienki Królewskie"
             content="Zespół pałacowo-ogrodowy w Warszawie założony w XVIII wieku przez Stanisława Augusta Poniatowskiego."
           />

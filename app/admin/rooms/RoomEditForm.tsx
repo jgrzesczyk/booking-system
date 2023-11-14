@@ -129,11 +129,10 @@ export const RoomEditForm: FC<RoomFormProps> = ({
             ? photos.map((item) => (
                 <div key={item} className="h-64 relative">
                   <CldImage
+                    className="object-cover"
                     fill
                     src={item}
                     alt="Widok pokoju"
-                    strictTransformations
-                    transformations={["photogallery"]}
                   />
                   <MdCancel
                     className="absolute top-1 right-1 w-6 h-6 cursor-pointer fill-green-800"

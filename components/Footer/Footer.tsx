@@ -16,7 +16,7 @@ const Footer: FC<{ isAdmin?: boolean }> = ({ isAdmin }) => {
         <div className="basis-1/2 flex flex-col items-center md:items-start">
           <Image
             className="bg-white p-2 rounded-md mb-3"
-            src="/logo.png"
+            src="https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/php1lsoethwkygceuxwk"
             alt="Wczasy pod gruszą"
             width={120}
             height={50}

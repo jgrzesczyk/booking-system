@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Wczasy "Pod Gruszą"',
   description: "Idealne miejsce na wakacje",
   icons: {
-    icon: "/logo.png",
+    icon: "https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/php1lsoethwkygceuxwk",
   },
 };
 

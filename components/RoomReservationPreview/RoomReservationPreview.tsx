@@ -31,13 +31,12 @@ const RoomReservationPreview: FC<
         </div>
       )}
       <div className="flex flex-col py-5 px-5 gap-5">
-        <div className={clsx("h-48 relative")}>
+        <div className="h-48 relative">
           <CldImage
+            className="object-cover"
             fill
             src={room.photos[0].name}
             alt={room.name}
-            strictTransformations
-            transformations={["photogallery"]}
           />
         </div>
         <div className={`flex flex-col gap-3`}>

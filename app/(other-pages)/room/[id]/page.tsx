@@ -6,6 +6,29 @@ import Link from "next/link";
 import { CCalendarLegend } from "@/components/CCalendar/CCalendar";
 import prisma from "@/lib/prisma";
 import { Amenity, Photo, Reservation, Room } from "@prisma/client";
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: number };
+}): Promise<Metadata> {
+  const room = await prisma.room.findUnique({
+    where: {
+      id: +params.id,
+      isActive: true,
+    },
+  });
+
+  return {
+    title: room?.name || "",
+    description: room?.description || "",
+    icons: {
+      icon: "https://res.cloudinary.com/dyzjn59cu/image/upload/f_auto,q_auto/v1/page-assets/php1lsoethwkygceuxwk",
+    },
+  };
+}
 
 async function getData(id: number) {
   const room = await prisma.room.findUnique({
@@ -47,12 +70,12 @@ const RoomPage = async ({ params }: { params: { id: number } }) => {
     data.reservationDates;
 
   if (!room) {
-    return null;
+    return notFound();
   }
 
   return (
     <>
-      <PageTitle title="Pokój Alfa" />
+      <PageTitle title={room.name} />
       <main className="w-full max-w-screen-lg mx-auto flex flex-col gap-8 md:grid md:grid-cols-2 my-10 md:gap-y-10 md:gap-10 px-5 xl:px-0">
         <div>
           <RoomGallery photos={room.photos} />

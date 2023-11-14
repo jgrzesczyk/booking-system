@@ -32,11 +32,10 @@ const RoomPreview: FC<
     >
       <div className={clsx("h-48 relative", isFormItem && "lg:w-2/5")}>
         <CldImage
+          className="object-cover"
           fill
           src={room.photos[0].name}
           alt={room.name}
-          strictTransformations
-          transformations={["photogallery"]}
         />
       </div>
       <div
