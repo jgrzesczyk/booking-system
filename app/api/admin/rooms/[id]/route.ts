@@ -69,6 +69,12 @@ export async function DELETE(
     );
   }
 
+  await prisma.photo.deleteMany({
+    where: {
+      roomId: +id,
+    },
+  });
+
   await prisma.room.delete({
     where: {
       id: +id,
@@ -91,6 +97,7 @@ export async function PUT(
     price,
     amenities,
     isActive,
+    photos,
   } = await req.json();
 
   const token: JWT | null = await getToken({ req });
@@ -106,7 +113,8 @@ export async function PUT(
     !bedsDescription ||
     !description ||
     !(+price > 0) ||
-    !amenities?.length
+    !amenities?.length ||
+    !photos?.length
   ) {
     return NextResponse.json(
       { errorMsg: "Nieprawidłowy format danych" },
@@ -129,7 +137,7 @@ export async function PUT(
     .map((item) => amenitiesResponse.find((a) => a.id === item))
     .filter((amenity): amenity is Amenity => !!amenity);
 
-  await prisma.room.update({
+  const updatedRoom = await prisma.room.update({
     where: {
       id: +id,
     },
@@ -146,6 +154,32 @@ export async function PUT(
       isActive: !!isActive,
     },
   });
+
+  await prisma.photo.deleteMany({
+    where: {
+      name: {
+        notIn: photos,
+      },
+      roomId: +id,
+    },
+  });
+
+  for (const photo in photos) {
+    const photoObj = await prisma.photo.findFirst({
+      where: {
+        name: photos[photo],
+      },
+    });
+
+    if (!photoObj) {
+      await prisma.photo.create({
+        data: {
+          name: photos[photo],
+          roomId: +id,
+        },
+      });
+    }
+  }
 
   return NextResponse.json(null, { status: 200 });
 }

@@ -4,7 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 import { RoomFormProps } from "@/app/admin/rooms/types";
 import { FaSpinner } from "react-icons/fa";
 import clsx from "clsx";
-import { CldImage } from "next-cloudinary";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 import { MdCancel } from "react-icons/md";
 import { useWatch } from "rc-field-form";
 import styles from "./RoomEditForm.module.scss";
@@ -16,6 +16,22 @@ export const RoomEditForm: FC<RoomFormProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const photos = useWatch("photos", form);
+
+  const handleAddPhoto = (e: { event?: string; info?: string | object }) => {
+    if (
+      e?.event === "success" &&
+      typeof e.info === "object" &&
+      "public_id" in e.info
+    ) {
+      form.setFields([
+        {
+          name: "photos",
+          errors: [],
+          value: [...(photos || []), e.info.public_id],
+        },
+      ]);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -147,6 +163,14 @@ export const RoomEditForm: FC<RoomFormProps> = ({
               ))
             : "Brak dodanych zdjęć"}
 
+          <CldUploadButton
+            className="bg-blue-800 bg-opacity-80 text-white cursor-pointer rounded-md py-2 flex items-center justify-center gap-4"
+            uploadPreset="gp2on3mt"
+            onUpload={handleAddPhoto}
+          >
+            Dodaj zdjęcie
+          </CldUploadButton>
+
           <Form.Item
             className={styles.photoField}
             name="photos"
@@ -156,7 +180,9 @@ export const RoomEditForm: FC<RoomFormProps> = ({
                 validator: (_, value) => {
                   return value?.length
                     ? Promise.resolve()
-                    : Promise.reject("Debil");
+                    : Promise.reject(
+                        "Co najmniej jedno zdjęcie jest wymagane.",
+                      );
                 },
               },
             ]}

@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     price,
     amenities,
     isActive,
+    photos,
   } = await req.json();
 
   const token: JWT | null = await getToken({ req });
@@ -56,7 +57,8 @@ export async function POST(req: NextRequest) {
     !bedsDescription ||
     !description ||
     !(+price > 0) ||
-    !amenities?.length
+    !amenities?.length ||
+    !photos?.length
   ) {
     return NextResponse.json(
       { errorMsg: "Nieprawidłowy format danych" },
@@ -83,6 +85,17 @@ export async function POST(req: NextRequest) {
       isActive: !!isActive,
     },
   });
+
+  for (const photo in photos) {
+    await prisma.photo.create({
+      data: {
+        name: photos[photo],
+        room: {
+          connect: newRoom,
+        },
+      },
+    });
+  }
 
   return NextResponse.json(newRoom, { status: 201 });
 }
