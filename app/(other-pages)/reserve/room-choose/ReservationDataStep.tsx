@@ -6,7 +6,7 @@ import { useWatch } from "rc-field-form";
 import { RoomReservationPreview } from "../../../../components";
 import { ReservationDataForm } from "@/app/(other-pages)/reserve/room-choose/types";
 import { PaymentMethod } from ".prisma/client";
-import { Room } from "@prisma/client";
+import { Photo, Room } from "@prisma/client";
 
 const ReservationDataStep: FC<{
   setIsValid: (val: boolean) => void;
@@ -14,7 +14,7 @@ const ReservationDataStep: FC<{
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [roomDetails, setRoomDetails] = useState<
-    (Room & { fullPrice: number }) | null
+    (Room & { fullPrice: number; photos: Photo[] }) | null
   >(null);
   const [form] = useForm();
   const context = useContext(RoomChooseContext);

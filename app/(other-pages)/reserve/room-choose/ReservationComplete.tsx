@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from "react";
 import { RoomReservationPreview } from "@/components";
 import { RoomChooseContext } from "@/app/(other-pages)/reserve/room-choose/_context";
 import { message, Skeleton } from "antd";
-import { Room } from "@prisma/client";
+import { Photo, Room } from "@prisma/client";
 
 const ReservationComplete: FC = () => {
   const context = useContext(RoomChooseContext);
@@ -10,7 +10,7 @@ const ReservationComplete: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [reservationDetails, setReservationDetails] = useState("");
   const [roomDetails, setRoomDetails] = useState<
-    (Room & { fullPrice: number }) | null
+    (Room & { photos: Photo[]; fullPrice: number }) | null
   >(null);
 
   useEffect(() => {

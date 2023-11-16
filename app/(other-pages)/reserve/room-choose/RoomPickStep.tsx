@@ -5,7 +5,7 @@ import { RoomChooseContext } from "@/app/(other-pages)/reserve/room-choose/_cont
 import { FormInstance, message, Skeleton } from "antd";
 import { ReservationBarData } from "@/app/(other-pages)/reserve/room-choose/types";
 import dayjs from "dayjs";
-import { Amenity, Room } from "@prisma/client";
+import { Amenity, Photo, Room } from "@prisma/client";
 
 const RoomPickStep: FC<{ setIsValid: (val: boolean) => void }> = ({
   setIsValid,
@@ -13,7 +13,7 @@ const RoomPickStep: FC<{ setIsValid: (val: boolean) => void }> = ({
   const [isInit, setIsInit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rooms, setRooms] = useState<
-    (Room & { amenities: Amenity[]; fullPrice: number })[]
+    (Room & { amenities: Amenity[]; fullPrice: number; photos: Photo[] })[]
   >([]);
 
   const searchParams = useSearchParams();

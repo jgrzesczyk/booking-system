@@ -137,7 +137,7 @@ export async function PUT(
     .map((item) => amenitiesResponse.find((a) => a.id === item))
     .filter((amenity): amenity is Amenity => !!amenity);
 
-  const updatedRoom = await prisma.room.update({
+  await prisma.room.update({
     where: {
       id: +id,
     },
