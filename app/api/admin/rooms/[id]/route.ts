@@ -126,6 +126,13 @@ export async function PUT(
     where: {
       id: +id,
     },
+    include: {
+      amenities: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
 
   if (!room) {
@@ -133,7 +140,10 @@ export async function PUT(
   }
 
   const amenitiesResponse = await prisma.amenity.findMany({});
-  const amenitiesData = (amenities as number[])
+  const amenitiesToRemove = room.amenities.filter(
+    ({ id }) => !(amenities as number[]).includes(id),
+  );
+  const newAmenities = (amenities as number[])
     .map((item) => amenitiesResponse.find((a) => a.id === item))
     .filter((amenity): amenity is Amenity => !!amenity);
 
@@ -149,7 +159,8 @@ export async function PUT(
       description,
       price: +price,
       amenities: {
-        connect: amenitiesData,
+        connect: newAmenities,
+        disconnect: amenitiesToRemove,
       },
       isActive: !!isActive,
     },

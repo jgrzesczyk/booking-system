@@ -72,7 +72,12 @@ async function Home() {
           width={0}
           height={0}
           sizes="100vw"
-          style={{ width: "100vw", height: "100%", objectFit: "cover" }}
+          style={{
+            width: "100vw",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "bottom",
+          }}
         />
         <h2 className="text-center uppercase font-bold text-2xl md:text-4xl mb-8 md:mb-16">
           Atrakcje
