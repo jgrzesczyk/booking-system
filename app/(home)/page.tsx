@@ -3,6 +3,8 @@ import { Attraction, ReservationBar, RoomPreview } from "@/components";
 import prisma from "@/lib/prisma";
 import { Amenity, Photo, Room } from "@prisma/client";
 
+export const revalidate = 1; //revalidates every one second -- requires page reload
+
 async function getData() {
   const rooms = await prisma.room.findMany({
     where: {

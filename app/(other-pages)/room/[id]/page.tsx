@@ -9,6 +9,8 @@ import { Amenity, Photo, Reservation, Room } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
+export const revalidate = 1; //revalidates every one second -- requires page reload
+
 export async function generateMetadata({
   params,
 }: {
